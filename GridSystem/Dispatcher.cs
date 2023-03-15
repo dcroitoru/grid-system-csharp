@@ -1,34 +1,26 @@
-﻿using GridSystem;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace LearningCsharpClassLibrary
+﻿using System;
+namespace GridSystemCSharp
 {
 
-
-    public class Dispatcher
+    public static class Dispatcher
     {
 
-        Dispatcher Instance { get; set; } = new Dispatcher();
-        public static Action<string, object> dispatchAction = (t, p) => { };
+        public static Action<ActionType, string> OnAction = (t, p) => { };
 
-
-        public Dispatcher()
+        public static void dispatch(ActionType type, string payload = "")
         {
-            Instance = this;
-        }
+            //Util.Log("should dispatch action", type, payload);
 
-        public static void dispatch(string type, string payload = "")
-        {
-            Util.Log("should dispatch action");
-
-            dispatchAction?.Invoke(type, payload);
+            OnAction?.Invoke(type, payload);
 
         }
 
-        public static IEnumerable next(string action)
+        public enum ActionType
         {
-            yield return action;
+            SetCurrent,
+            Clear,
+            StartSelection,
+            StopSelection
         }
 
     }

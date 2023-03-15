@@ -1,20 +1,24 @@
+using System.Collections.Generic;
 using System;
+using System.Linq;
 
-namespace GridSystem
+namespace GridSystemCSharp
 {
     public class Util
     {
         public static void Log(params object[] args)
-        {
+        {            
 
             foreach (object arg in args)
             {
-                Console.Write(arg.ToString() + " ");
-                System.Diagnostics.Debug.Write(arg.ToString() + " ");
+                var str = arg.ToString() + "; ";
+                Console.Write(str);
+                System.Diagnostics.Debug.Write(str);
             }
-
-            Console.WriteLine();
+            Console.WriteLine("");
             System.Diagnostics.Debug.WriteLine("");
+            Console.WriteLine("-----------------------");
+            System.Diagnostics.Debug.WriteLine("-----------------------");
 
 
         }
@@ -32,10 +36,11 @@ namespace GridSystem
             System.Diagnostics.Debug.WriteLine("");
         }
 
+        public static int[] KeyToPair(string key)
+        {
+            return key.Split("-").Select(int.Parse).ToArray();
+        }
 
-
-        public static Action Log2 = () => Console.Out.WriteLine("hah");
-
-        public static Action Log2Ext = () => Log2();
+        
     }
 }

@@ -1,10 +1,24 @@
-﻿// See https://aka.ms/new-console-template for more information
-using GridSystem;
+﻿using GridSystemCSharp;
+var gridSystem = new GridSystem();
 
-Console.WriteLine("Hello, World!");
+gridSystem.grid.OnChanged += (GridType value) =>
+{
+    //Util.Log("on grid changed handler");
+    Util.LogColl(value);
 
-var list = new List<int> { 1, 2, 3};
+};
 
-Util.Log("should log", "this", "thing");
-Util.LogColl(list);
+
+Dispatcher.dispatch(Dispatcher.ActionType.SetCurrent, "1-1");
+Dispatcher.dispatch(Dispatcher.ActionType.StartSelection);
+Dispatcher.dispatch(Dispatcher.ActionType.SetCurrent, "2-1");
+Dispatcher.dispatch(Dispatcher.ActionType.SetCurrent, "3-1");
+Dispatcher.dispatch(Dispatcher.ActionType.SetCurrent, "4-1");
+Dispatcher.dispatch(Dispatcher.ActionType.StopSelection);
+
+
+/*Dispatcher.dispatch("cancel", "cancel payload");
+Dispatcher.dispatch("clear", "clear payload");*/
+
+
 
