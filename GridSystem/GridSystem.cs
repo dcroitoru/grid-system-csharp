@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
-namespace GridSystemCSharp
+using CustomGridSystem.Core;
+
+namespace CustomGridSystem.GridSystem
 {
     public class GridSystem
     {

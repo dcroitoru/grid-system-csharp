@@ -1,4 +1,6 @@
-﻿using GridSystemCSharp;
+﻿using CustomGridSystem.Core;
+using CustomGridSystem.GridSystem;
+
 var gridSystem = new GridSystem();
 
 gridSystem.grid.OnChanged += (GridType value) =>

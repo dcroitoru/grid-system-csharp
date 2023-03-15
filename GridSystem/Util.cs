@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace GridSystemCSharp
+namespace CustomGridSystem.GridSystem
 {
     public class Util
     {

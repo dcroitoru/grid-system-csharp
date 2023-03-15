@@ -1,5 +1,6 @@
 ﻿using System;
-namespace GridSystemCSharp
+
+namespace CustomGridSystem.Core
 {
 
     public static class Dispatcher
@@ -20,7 +21,8 @@ namespace GridSystemCSharp
             SetCurrent,
             Clear,
             StartSelection,
-            StopSelection
+            StopSelection,
+            SetTool
         }
 
     }
