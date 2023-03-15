@@ -10,10 +10,7 @@ namespace CustomGridSystem.Core
 
         public static void dispatch(ActionType type, string payload = "")
         {
-            //Util.Log("should dispatch action", type, payload);
-
             OnAction?.Invoke(type, payload);
-
         }
 
         public enum ActionType
@@ -23,6 +20,19 @@ namespace CustomGridSystem.Core
             StartSelection,
             StopSelection,
             SetTool
+        }
+
+        public enum ToolType
+        {
+            Tree,
+            Road,
+            House
+        }
+
+        public enum HighlightType
+        {
+            Allow,
+            Deny
         }
 
     }

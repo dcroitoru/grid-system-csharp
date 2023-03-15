@@ -1,20 +1,16 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Collections;
 
 namespace CustomGridSystem.GridSystem
 {
     public class Util
     {
         public static void Log(params object[] args)
-        {            
+        {
+            string result = string.Join(", ", args);
 
-            foreach (object arg in args)
-            {
-                var str = arg.ToString() + "; ";
-                Console.Write(str);
-                System.Diagnostics.Debug.Write(str);
-            }
             Console.WriteLine("");
             System.Diagnostics.Debug.WriteLine("");
             Console.WriteLine("-----------------------");
@@ -24,16 +20,31 @@ namespace CustomGridSystem.GridSystem
         }
 
 
-        public static void LogColl<T>(IEnumerable<T> coll)
+        public static void LogColl(IEnumerable coll, int level = 0)
         {
+
             foreach (var item in coll)
             {
-                Console.Write(item?.ToString() + "; ");
-                System.Diagnostics.Debug.Write(item?.ToString() + " ");
+
+                if (item.GetType().IsArray)
+                {
+                    LogColl((IEnumerable)item);
+                }
+                else
+                {
+                    Console.Write($"{item} ");
+                    System.Diagnostics.Debug.Write($"{item} ");
+
+                }
+
             }
+
+
 
             Console.WriteLine();
             System.Diagnostics.Debug.WriteLine("");
+            Console.WriteLine("-----------------------");
+            System.Diagnostics.Debug.WriteLine("-----------------------");
         }
 
         public static int[] KeyToPair(string key)
@@ -41,6 +52,5 @@ namespace CustomGridSystem.GridSystem
             return key.Split("-").Select(int.Parse).ToArray();
         }
 
-        
     }
 }
