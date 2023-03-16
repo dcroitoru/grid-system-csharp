@@ -8,7 +8,7 @@ namespace CustomGridSystem.GridSystem
 {
     public class Geometry
     {
-        public static int[] createInterval(int x0, int x1)
+        public static int[] CreateInterval(int x0, int x1)
         {
             int sign = Math.Sign(x1 - x0);
             sign = sign == 0 ? 1 : sign;
@@ -24,16 +24,37 @@ namespace CustomGridSystem.GridSystem
         }
 
 
-        public static Point[] createSegmentOnX(int[] interval, int y) => interval.Select(x => new Point(x, y)).ToArray();
-        public static Point[] createSegmentOnY(int[] interval, int x) => interval.Select(y => new Point(x, y)).ToArray();
-        public static Point[] createArea(Point p0, Point p1)
+        public static Point[] CreateSegmentOnX(int[] interval, int y) => interval.Select(x => new Point(x, y)).ToArray();
+        public static Point[] CreateSegmentOnY(int[] interval, int x) => interval.Select(y => new Point(x, y)).ToArray();
+        public static Point[] CreateArea(Point p0, Point p1)
         {
-            int[] xInterval = createInterval(p0.x, p1.x);
-            int[] yInterval = createInterval(p0.y, p1.y);
-            Point[][] ySegments = yInterval.Select((y) => createSegmentOnX(xInterval, y)).ToArray();
+            int[] xInterval = CreateInterval(p0.x, p1.x);
+            int[] yInterval = CreateInterval(p0.y, p1.y);
+            Point[][] ySegments = yInterval.Select((y) => CreateSegmentOnX(xInterval, y)).ToArray();
 
             return ySegments.SelectMany(x => x).Distinct().ToArray();
 
+        }
+
+        public static Point[] CreateHalfPerimeter(Point p0, Point p1)
+        {
+            int[] xInterval = CreateInterval(p0.x, p1.x);
+            int[] yInterval = CreateInterval(p0.y, p1.y);
+
+            return CreateSegmentOnX(xInterval, p0.y).Concat(CreateSegmentOnY(yInterval, p1.x)).Distinct().ToArray();
+        }
+
+        public static Point[] CreateHalfPerimeterFlipped(Point p0, Point p1)
+        {
+            int[] xInterval = CreateInterval(p0.x, p1.x);
+            int[] yInterval = CreateInterval(p0.y, p1.y);
+
+            return CreateSegmentOnY(yInterval, p0.x).Concat(CreateSegmentOnX(xInterval, p1.y)).ToArray();
+        }
+
+        public static Point[] CreatePoint(Point p0, Point p1)
+        {
+            return new[] { p1 };
         }
 
     }
@@ -60,6 +81,6 @@ namespace CustomGridSystem.GridSystem
         {
             return $"{p.x}-{p.y}";
         }
-        
+
     }
 }

@@ -1,20 +1,23 @@
-﻿using System;
+﻿using CustomGridSystem.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CustomGridSystem.GridSystem
-{    public class Grid
+{
+    public class Grid
     {
 
         public Action<GridType> OnChanged = (g) => { };
         GridType _value = new();
-        public Grid(string name) {
+        public Grid(string name)
+        {
             Util.Log("grid created", name);
         }
 
-        public void set((string key, string value)[] kvs)
+        public void set((string key, Dispatcher.ToolType value)[] kvs)
         {
             foreach (var kv in kvs)
             {
@@ -25,7 +28,7 @@ namespace CustomGridSystem.GridSystem
             OnChanged(_value);
         }
 
-        public void set(GridType kvs) 
+        public void set(GridType kvs)
         {
             foreach (var kv in kvs)
             {
@@ -46,7 +49,17 @@ namespace CustomGridSystem.GridSystem
             _value.Clear();
             OnChanged(_value);
         }
+
+        public void clearInternal()
+        {
+            _value.Clear();
+        }
+
+        public GridType Value()
+        {
+            return _value;
+        }
     }
 
-    public class GridType : Dictionary<string, string> { }
+    public class GridType : Dictionary<string, Dispatcher.ToolType> { }
 }

@@ -1,24 +1,30 @@
 ﻿using System.Collections.Generic;
 using System;
 using CustomGridSystem.Core;
+using System.Linq;
 
 namespace CustomGridSystem.GridSystem
 {
     public class GridSystem
     {
 
-        public Grid grid { get; } = new("hover");
+        public Grid gridHighlight { get; } = new("hover");
+        public Grid gridPermanent { get; } = new("hover");
 
         Dictionary<Dispatcher.ActionType, Action<object>> _actionMap;
-        Dictionary<Dispatcher.ToolType, Action<object>> _createHighlightFn;
+        Dictionary<Dispatcher.ToolType, Func<Point, Point, Point[]>> _createHighlightFnMap;
 
-        private string _startKey;
-        private string _currentKey;
+        private string? _startKey;
+        private string? _currentKey;
         private Dispatcher.ToolType _toolType;
+        private Func<Point, Point, Point[]>? _highlightFn;
 
 
         public GridSystem()
         {
+
+            Dispatcher.OnAction += handleAction;
+
             _actionMap = new Dictionary<Dispatcher.ActionType, Action<object>>
             {
                 {Dispatcher.ActionType.Clear, clear},
@@ -26,16 +32,18 @@ namespace CustomGridSystem.GridSystem
                 {Dispatcher.ActionType.StartSelection, startSelection },
                 {Dispatcher.ActionType.StopSelection, stopSelection },
 
-                {Dispatcher.ActionType.SetTool, stopSelection },
+                {Dispatcher.ActionType.SetTool, setTool},
 
             };
 
-            Dispatcher.OnAction += handleAction;
 
 
-            /*_createHighlightFn = new Dictionary<Dispatcher.ToolType, Action<object>> {
-                {Dispatcher.ToolType.Tree, createRect }
-            };*/
+
+            _createHighlightFnMap = new Dictionary<Dispatcher.ToolType, Func<Point, Point, Point[]>> {
+                {Dispatcher.ToolType.Tree, Geometry.CreateArea },
+                {Dispatcher.ToolType.Road, Geometry.CreateHalfPerimeter },
+                {Dispatcher.ToolType.House, Geometry.CreatePoint }
+            };
         }
 
         void handleAction(Dispatcher.ActionType type, object payload)
@@ -59,42 +67,39 @@ namespace CustomGridSystem.GridSystem
 
             if (_startKey != null)
             {
+
+                //Util.Log("should set dragging", payload);
+
                 var p0 = Point.KeyToPoint(_startKey);
                 var p1 = Point.KeyToPoint(key);
-                var area = Geometry.createArea(p0, p1);                
+                var points = _highlightFn(p0, p1);
 
-                GridType dict = new();
-                area.Select(Point.PointToKey).ToList().ForEach(item => dict.Add(item, "allow"));
-                GridType value = (GridType)dict;
+                GridType dict = Util.CreateGridApplyTool(points, Dispatcher.ToolType.Allow);
+                //    new();
+                //h.Select(Point.PointToKey).ToList().ForEach(item => dict.Add(item, Dispatcher.ToolType.Allow));
 
-                grid.clear();
-                grid.set(value);
+                gridHighlight.clear();
+                gridHighlight.set(dict);
+
+
 
             }
             else
             {
-                Util.Log("should set current", payload);
-                GridType value = new() { { key, "allow" } };
-                grid.clear();
-                grid.set(value);
+                //Util.Log("should set current", payload);
+                GridType value = new() { { key, Dispatcher.ToolType.Allow } };
+                gridHighlight.clear();
+                gridHighlight.set(value);
 
             }
 
-
             _currentKey = key;
-
-
-        }
-
-        void cancel(object payload)
-        {
-            Util.Log("should handle cancel", payload);
         }
 
         void clear(object payload)
         {
             Util.Log("should handle clear", payload);
-            grid.clear();
+            gridHighlight.clear();
         }
 
         void startSelection(object payload)
@@ -106,8 +111,10 @@ namespace CustomGridSystem.GridSystem
         void stopSelection(object payload)
         {
             Util.Log("should stop selection between", _startKey, _currentKey);
-            clear(payload);
 
+            var dict = Util.TransformGridApplyTool(gridHighlight.Value(), _toolType);
+            gridPermanent.set(dict);
+            gridHighlight.clear();
             _startKey = null;
             //_currentKey = null;
         }
@@ -115,6 +122,8 @@ namespace CustomGridSystem.GridSystem
         void setTool(object payload)
         {
             _toolType = (Dispatcher.ToolType)payload;
+            _highlightFn = _createHighlightFnMap[_toolType];
+                
             Util.Log("should set current tool", _toolType);
         }
 

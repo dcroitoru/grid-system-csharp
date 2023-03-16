@@ -4,11 +4,10 @@ namespace CustomGridSystem.Core
 {
 
     public static class Dispatcher
-    {
+    {        
+        public static Action<ActionType, object?> OnAction = (t, p) => { };
 
-        public static Action<ActionType, string> OnAction = (t, p) => { };
-
-        public static void dispatch(ActionType type, string payload = "")
+        public static void dispatch(ActionType type, object? payload = null)
         {
             OnAction?.Invoke(type, payload);
         }
@@ -24,9 +23,12 @@ namespace CustomGridSystem.Core
 
         public enum ToolType
         {
+            None,
+            Allow,
+            Deny,
             Tree,
             Road,
-            House
+            House,
         }
 
         public enum HighlightType
