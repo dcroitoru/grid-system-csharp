@@ -10,6 +10,7 @@ namespace CustomGridSystem.GridSystem
 
         public Grid gridHighlight { get; } = new("hover");
         public Grid gridPermanent { get; } = new("hover");
+        public Dispatcher.ToolType ToolType { get => _toolType; }
 
         Dictionary<Dispatcher.ActionType, Action<object>> _actionMap;
         Dictionary<Dispatcher.ToolType, Func<Point, Point, Point[]>> _createHighlightFnMap;
@@ -17,13 +18,15 @@ namespace CustomGridSystem.GridSystem
         private string? _startKey;
         private string? _currentKey;
         private Dispatcher.ToolType _toolType;
-        private Func<Point, Point, Point[]>? _highlightFn;
+        private Func<Point, Point, Point[]>? _highlightFn ;
 
 
         public GridSystem()
         {
 
             Dispatcher.OnAction += handleAction;
+
+
 
             _actionMap = new Dictionary<Dispatcher.ActionType, Action<object>>
             {
@@ -44,6 +47,9 @@ namespace CustomGridSystem.GridSystem
                 {Dispatcher.ToolType.Road, Geometry.CreateHalfPerimeter },
                 {Dispatcher.ToolType.House, Geometry.CreatePoint }
             };
+
+            _toolType = Dispatcher.ToolType.Tree;
+            _highlightFn = _createHighlightFnMap[ToolType];
         }
 
         void handleAction(Dispatcher.ActionType type, object payload)
@@ -112,7 +118,7 @@ namespace CustomGridSystem.GridSystem
         {
             Util.Log("should stop selection between", _startKey, _currentKey);
 
-            var dict = Util.TransformGridApplyTool(gridHighlight.Value(), _toolType);
+            var dict = Util.TransformGridApplyTool(gridHighlight.Value(), ToolType);
             gridPermanent.set(dict);
             gridHighlight.clear();
             _startKey = null;
@@ -122,9 +128,9 @@ namespace CustomGridSystem.GridSystem
         void setTool(object payload)
         {
             _toolType = (Dispatcher.ToolType)payload;
-            _highlightFn = _createHighlightFnMap[_toolType];
+            _highlightFn = _createHighlightFnMap[ToolType];
                 
-            Util.Log("should set current tool", _toolType);
+            Util.Log("should set current tool", ToolType);
         }
 
         void DefaultHandler(object payload)
