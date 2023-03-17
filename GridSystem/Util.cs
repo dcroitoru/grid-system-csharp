@@ -1,3 +1,6 @@
+using static CustomGridSystem.Core.Constants;
+using GridType = System.Collections.Generic.Dictionary<string, CustomGridSystem.Core.Constants.ToolType>;
+
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -55,13 +58,7 @@ namespace CustomGridSystem.GridSystem
 
         public static GridType TransformGridApplyTool(GridType grid, ToolType toolType)
         {
-            /**
-             * why isn't this working?
-             * var dict = (GridType)gridHighlight.Value().Select(x => KeyValuePair.Create(x.Key, ToolType.Road));
-             */
-
-            GridType dict = new();
-            grid.ToList().ForEach(item => dict.Add(item.Key, toolType));
+            GridType dict = grid.ToDictionary(x =>  x.Key, x => toolType);
             return dict;
 
         }

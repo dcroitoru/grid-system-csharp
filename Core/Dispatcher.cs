@@ -1,4 +1,5 @@
-﻿using System;
+﻿using static CustomGridSystem.Core.Constants;
+using System;
 
 namespace CustomGridSystem.Core
 {

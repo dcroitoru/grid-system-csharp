@@ -1,5 +1,5 @@
-﻿global using static CustomGridSystem.Core.Constants;
-global using GridType = System.Collections.Generic.Dictionary<string, CustomGridSystem.Core.Constants.ToolType>;
+﻿using static CustomGridSystem.Core.Constants;
+using GridType = System.Collections.Generic.Dictionary<string, CustomGridSystem.Core.Constants.ToolType>;
 using System.Collections.Generic;
 using System;
 using CustomGridSystem.Core;

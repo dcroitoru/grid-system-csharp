@@ -1,4 +1,6 @@
-﻿using CustomGridSystem.Core;
+﻿using static CustomGridSystem.Core.Constants;
+using GridType = System.Collections.Generic.Dictionary<string, CustomGridSystem.Core.Constants.ToolType>;
+using CustomGridSystem.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
