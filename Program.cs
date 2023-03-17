@@ -1,4 +1,6 @@
-﻿using CustomGridSystem.Core;
+﻿using static CustomGridSystem.Core.Constants;
+using GridType = System.Collections.Generic.Dictionary<string, CustomGridSystem.Core.Constants.ToolType>;
+using CustomGridSystem.Core;
 using CustomGridSystem.GridSystem;
 
 var gridSystem = new GridSystem();
@@ -22,20 +24,20 @@ gridSystem.gridPermanent.OnChanged += (GridType value) =>
 
 
 
+Dispatcher.dispatch(ActionType.SetTool, ToolType.Road);
+
+
+Dispatcher.dispatch(ActionType.SetCurrent, "0-0");
+Dispatcher.dispatch(ActionType.StartSelection);
+Dispatcher.dispatch(ActionType.SetCurrent, "1-0");
+Dispatcher.dispatch(ActionType.StopSelection);
+
 Dispatcher.dispatch(ActionType.SetTool, ToolType.Tree);
 
 
 Dispatcher.dispatch(ActionType.SetCurrent, "0-0");
 Dispatcher.dispatch(ActionType.StartSelection);
-Dispatcher.dispatch(ActionType.SetCurrent, "3-3");
-Dispatcher.dispatch(ActionType.StopSelection);
-
-
-Dispatcher.dispatch(ActionType.SetTool, ToolType.Road);
-
-Dispatcher.dispatch(ActionType.SetCurrent, "0-0");
-Dispatcher.dispatch(ActionType.StartSelection);
-Dispatcher.dispatch(ActionType.SetCurrent, "5-0");
+Dispatcher.dispatch(ActionType.SetCurrent, "0-1");
 Dispatcher.dispatch(ActionType.StopSelection);
 
 

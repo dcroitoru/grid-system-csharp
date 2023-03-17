@@ -10,8 +10,8 @@ namespace CustomGridSystem.GridSystem
     public class GridSystem
     {
 
-        public Grid gridHighlight { get; } = new("hover");
-        public Grid gridPermanent { get; } = new("hover");
+        public Grid gridHighlight { get; } = new("highlight");
+        public Grid gridPermanent { get; } = new("permanent");
         public ToolType ToolType { get => _toolType; }
 
         Dictionary<ActionType, Action<object>> _actionMap;
@@ -40,9 +40,6 @@ namespace CustomGridSystem.GridSystem
                 {ActionType.SetTool, setTool},
 
             };
-
-
-
 
             _createHighlightFnMap = new Dictionary<ToolType, Func<Point, Point, Point[]>> {
                 {ToolType.Tree, Geometry.CreateArea },
@@ -82,7 +79,10 @@ namespace CustomGridSystem.GridSystem
                 var p1 = Point.KeyToPoint(key);
                 var points = _highlightFn(p0, p1);
 
-                GridType dict = Util.CreateGridApplyTool(points, ToolType.Allow);
+                var dict = Util.CreateGridApplyTool(points, ToolType.Allow);
+                var cannotBuildOn = gridPermanent.Value().ToList().Where(i => Rules.CannotBuild(_toolType, i.Value)).Select(i => i.Key);
+                cannotBuildOn.ToList().ForEach(i => dict[i] = ToolType.Deny);
+
                 //    new();
                 //h.Select(Point.PointToKey).ToList().ForEach(item => dict.Add(item, ToolType.Allow));
 
@@ -95,7 +95,14 @@ namespace CustomGridSystem.GridSystem
             else
             {
                 //Util.Log("should set current", payload);
-                GridType value = new() { { key, ToolType.Allow } };
+                bool cannotBuildOn = false;
+                if(gridPermanent.get(key))
+                {
+                    var buildOver =  gridPermanent.Value()[key];
+                    cannotBuildOn = Rules.CannotBuild(_toolType, buildOver);
+
+                }
+                GridType value = new() { { key, cannotBuildOn ? ToolType.Deny : ToolType.Allow } };
                 gridHighlight.clear();
                 gridHighlight.set(value);
 
@@ -120,7 +127,8 @@ namespace CustomGridSystem.GridSystem
         {
             Util.Log("should stop selection between", _startKey, _currentKey);
 
-            var dict = Util.TransformGridApplyTool(gridHighlight.Value(), ToolType);
+            var filteredHighlight = gridHighlight.Value().Where(i => i.Value == ToolType.Allow).ToDictionary(x => x.Key, x => x.Value);
+            var dict = Util.TransformGridApplyTool(filteredHighlight, ToolType);
             gridPermanent.set(dict);
             gridHighlight.clear();
             _startKey = null;

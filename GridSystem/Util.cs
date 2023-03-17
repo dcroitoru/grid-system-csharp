@@ -69,8 +69,5 @@ namespace CustomGridSystem.GridSystem
             points.Select(Point.PointToKey).ToList().ForEach(item => dict.Add(item, toolType));
             return dict;
         }
-
-
-
     }
 }
