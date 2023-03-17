@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿global using static CustomGridSystem.Core.Constants;
+global using GridType = System.Collections.Generic.Dictionary<string, CustomGridSystem.Core.Constants.ToolType>;
+using System.Collections.Generic;
 using System;
 using CustomGridSystem.Core;
 using System.Linq;
@@ -10,14 +12,14 @@ namespace CustomGridSystem.GridSystem
 
         public Grid gridHighlight { get; } = new("hover");
         public Grid gridPermanent { get; } = new("hover");
-        public Dispatcher.ToolType ToolType { get => _toolType; }
+        public ToolType ToolType { get => _toolType; }
 
-        Dictionary<Dispatcher.ActionType, Action<object>> _actionMap;
-        Dictionary<Dispatcher.ToolType, Func<Point, Point, Point[]>> _createHighlightFnMap;
+        Dictionary<ActionType, Action<object>> _actionMap;
+        Dictionary<ToolType, Func<Point, Point, Point[]>> _createHighlightFnMap;
 
         private string? _startKey;
         private string? _currentKey;
-        private Dispatcher.ToolType _toolType;
+        private ToolType _toolType;
         private Func<Point, Point, Point[]>? _highlightFn ;
 
 
@@ -28,31 +30,31 @@ namespace CustomGridSystem.GridSystem
 
 
 
-            _actionMap = new Dictionary<Dispatcher.ActionType, Action<object>>
+            _actionMap = new Dictionary<ActionType, Action<object>>
             {
-                {Dispatcher.ActionType.Clear, clear},
-                {Dispatcher.ActionType.SetCurrent, setCurrent },
-                {Dispatcher.ActionType.StartSelection, startSelection },
-                {Dispatcher.ActionType.StopSelection, stopSelection },
+                {ActionType.Clear, clear},
+                {ActionType.SetCurrent, setCurrent },
+                {ActionType.StartSelection, startSelection },
+                {ActionType.StopSelection, stopSelection },
 
-                {Dispatcher.ActionType.SetTool, setTool},
+                {ActionType.SetTool, setTool},
 
             };
 
 
 
 
-            _createHighlightFnMap = new Dictionary<Dispatcher.ToolType, Func<Point, Point, Point[]>> {
-                {Dispatcher.ToolType.Tree, Geometry.CreateArea },
-                {Dispatcher.ToolType.Road, Geometry.CreateHalfPerimeter },
-                {Dispatcher.ToolType.House, Geometry.CreatePoint }
+            _createHighlightFnMap = new Dictionary<ToolType, Func<Point, Point, Point[]>> {
+                {ToolType.Tree, Geometry.CreateArea },
+                {ToolType.Road, Geometry.CreateHalfPerimeter },
+                {ToolType.House, Geometry.CreatePoint }
             };
 
-            _toolType = Dispatcher.ToolType.Tree;
+            _toolType = ToolType.Tree;
             _highlightFn = _createHighlightFnMap[ToolType];
         }
 
-        void handleAction(Dispatcher.ActionType type, object payload)
+        void handleAction(ActionType type, object payload)
         {
             //Util.Log("should handle action in system", type, payload);
             var handler = _actionMap.ContainsKey(type) == true ? _actionMap[type] : DefaultHandler;
@@ -80,9 +82,9 @@ namespace CustomGridSystem.GridSystem
                 var p1 = Point.KeyToPoint(key);
                 var points = _highlightFn(p0, p1);
 
-                GridType dict = Util.CreateGridApplyTool(points, Dispatcher.ToolType.Allow);
+                GridType dict = Util.CreateGridApplyTool(points, ToolType.Allow);
                 //    new();
-                //h.Select(Point.PointToKey).ToList().ForEach(item => dict.Add(item, Dispatcher.ToolType.Allow));
+                //h.Select(Point.PointToKey).ToList().ForEach(item => dict.Add(item, ToolType.Allow));
 
                 gridHighlight.clear();
                 gridHighlight.set(dict);
@@ -93,7 +95,7 @@ namespace CustomGridSystem.GridSystem
             else
             {
                 //Util.Log("should set current", payload);
-                GridType value = new() { { key, Dispatcher.ToolType.Allow } };
+                GridType value = new() { { key, ToolType.Allow } };
                 gridHighlight.clear();
                 gridHighlight.set(value);
 
@@ -127,7 +129,7 @@ namespace CustomGridSystem.GridSystem
 
         void setTool(object payload)
         {
-            _toolType = (Dispatcher.ToolType)payload;
+            _toolType = (ToolType)payload;
             _highlightFn = _createHighlightFnMap[ToolType];
                 
             Util.Log("should set current tool", ToolType);

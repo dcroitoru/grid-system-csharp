@@ -11,33 +11,5 @@ namespace CustomGridSystem.Core
         {
             OnAction?.Invoke(type, payload);
         }
-
-        public enum ActionType
-        {
-            SetCurrent,
-            Clear,
-            StartSelection,
-            StopSelection,
-            SetTool
-        }
-
-        public enum ToolType
-        {
-            None,
-            Allow,
-            Deny,
-            Tree,
-            Road,
-            House,
-        }
-
-        public enum HighlightType
-        {
-            Allow,
-            Deny
-        }
-
     }
-
-
 }

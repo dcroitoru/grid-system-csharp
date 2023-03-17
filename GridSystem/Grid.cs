@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace CustomGridSystem.GridSystem
 {
@@ -12,36 +13,19 @@ namespace CustomGridSystem.GridSystem
 
         public Action<GridType> OnChanged = (g) => { };
         GridType _value = new();
+        GridType _oldValue = new();
         public Grid(string name)
         {
             Util.Log("grid created", name);
         }
 
-        public void set((string key, Dispatcher.ToolType value)[] kvs)
-        {
-            foreach (var kv in kvs)
-            {
-                _value[kv.key] = kv.value;
-
-            }
-
-            OnChanged(_value);
-        }
+        public GridType Value() => _value;            
+        public bool get(string key) => _value.ContainsKey(key);
 
         public void set(GridType kvs)
         {
-            foreach (var kv in kvs)
-            {
-                _value[kv.Key] = kv.Value;
-
-            }
-
+            foreach (var kv in kvs) _value[kv.Key] = kv.Value;
             OnChanged(_value);
-        }
-
-        public bool get(string key)
-        {
-            return _value.ContainsKey(key);
         }
 
         public void clear()
@@ -55,11 +39,6 @@ namespace CustomGridSystem.GridSystem
             _value.Clear();
         }
 
-        public GridType Value()
-        {
-            return _value;
-        }
+        
     }
-
-    public class GridType : Dictionary<string, Dispatcher.ToolType> { }
 }

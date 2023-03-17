@@ -5,29 +5,38 @@ var gridSystem = new GridSystem();
 
 gridSystem.gridHighlight.OnChanged += (GridType value) =>
 {
-    Util.Log("on temp grid changed handler", value.Count);
+    //Util.Log("on temp grid changed handler", value.Count);
     Util.LogColl(value);
-   
+
 
 };
 
 gridSystem.gridPermanent.OnChanged += (GridType value) =>
 {
-    Util.Log("on perma grid changed handler", value.Count);
+    //Util.Log("on perma grid changed handler", value.Count);
+    Util.Log("new grid value:");
     Util.LogColl(value);
 };
 
-Dispatcher.dispatch(Dispatcher.ActionType.SetTool, Dispatcher.ToolType.Road);
 
 
-Dispatcher.dispatch(Dispatcher.ActionType.SetCurrent, "0-0");
-Dispatcher.dispatch(Dispatcher.ActionType.StartSelection);
-Dispatcher.dispatch(Dispatcher.ActionType.SetCurrent, "4-5");
-Dispatcher.dispatch(Dispatcher.ActionType.StopSelection);
 
-Dispatcher.dispatch(Dispatcher.ActionType.StartSelection);
-Dispatcher.dispatch(Dispatcher.ActionType.SetCurrent, "9-9");
-Dispatcher.dispatch(Dispatcher.ActionType.StopSelection);
+
+Dispatcher.dispatch(ActionType.SetTool, ToolType.Tree);
+
+
+Dispatcher.dispatch(ActionType.SetCurrent, "0-0");
+Dispatcher.dispatch(ActionType.StartSelection);
+Dispatcher.dispatch(ActionType.SetCurrent, "3-3");
+Dispatcher.dispatch(ActionType.StopSelection);
+
+
+Dispatcher.dispatch(ActionType.SetTool, ToolType.Road);
+
+Dispatcher.dispatch(ActionType.SetCurrent, "0-0");
+Dispatcher.dispatch(ActionType.StartSelection);
+Dispatcher.dispatch(ActionType.SetCurrent, "5-0");
+Dispatcher.dispatch(ActionType.StopSelection);
 
 
 /*Dispatcher.dispatch("cancel", "cancel payload");

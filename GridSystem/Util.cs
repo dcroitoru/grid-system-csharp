@@ -53,11 +53,11 @@ namespace CustomGridSystem.GridSystem
             return key.Split("-").Select(int.Parse).ToArray();
         }
 
-        public static GridType TransformGridApplyTool(GridType grid, Dispatcher.ToolType toolType)
+        public static GridType TransformGridApplyTool(GridType grid, ToolType toolType)
         {
             /**
              * why isn't this working?
-             * var dict = (GridType)gridHighlight.Value().Select(x => KeyValuePair.Create(x.Key, Dispatcher.ToolType.Road));
+             * var dict = (GridType)gridHighlight.Value().Select(x => KeyValuePair.Create(x.Key, ToolType.Road));
              */
 
             GridType dict = new();
@@ -66,7 +66,7 @@ namespace CustomGridSystem.GridSystem
 
         }
 
-        public static GridType CreateGridApplyTool(Point[] points, Dispatcher.ToolType toolType)
+        public static GridType CreateGridApplyTool(Point[] points, ToolType toolType)
         {
             GridType dict = new();
             points.Select(Point.PointToKey).ToList().ForEach(item => dict.Add(item, toolType));
